@@ -51,5 +51,7 @@ services:
       - BROWSER=${BROWSER}
       - ENVIRONMENT=${ENVIRONMENT}
       - SUITE_XML=${SUITE_XML}
+      - REMOTE_URL=http://selenium-hub:4444/wd/hub
+
     volumes:
       - .:/app
