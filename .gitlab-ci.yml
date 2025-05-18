@@ -1,0 +1,55 @@
+stages:
+  - test
+
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
+  DOCKER_HOST: tcp://docker:2375/
+  DOCKER_TLS_CERTDIR: ""
+
+# Define pipeline-level variables with options so you can select at pipeline run time
+# These appear in GitLab UI when you run pipeline manually
+variables:
+  BROWSER:
+    value: "edge"
+    options:
+      - "chrome"
+      - "firefox"
+      - "edge"
+    description: "Select the browser to test on"
+
+  ENVIRONMENT:
+    value: "remote"
+    options:
+      - "qa"
+      - "remote"
+      - "uat"
+      - "prod"
+    description: "Select environment"
+
+  SUITE_XML:
+    value: "testng-chrome.xml"
+    options:
+      - "testng-chrome.xml"
+      - "testng.xml"
+      - "testng-firefox.xml"
+      - "testng-edge.xml"
+    description: "Select TestNG suite XML file"
+
+test:
+  image: docker:latest
+  services:
+    - docker:dind
+  stage: test
+  before_script:
+    - apk add --no-cache docker-compose
+  script:
+    # Export variables so docker-compose picks them up
+    - export BROWSER=$BROWSER
+    - export ENVIRONMENT=$ENVIRONMENT
+    - export SUITE_XML=$SUITE_XML
+    # Run docker-compose, pass env variables inside container
+    - docker-compose up --abort-on-container-exit --build
+  artifacts:
+    when: always
+    paths:
+      - target/surefire-reports/
