@@ -6,9 +6,28 @@ variables:
   DOCKER_HOST: tcp://docker:2375/
   DOCKER_TLS_CERTDIR: ""
 
-  BROWSER: "edge"
-  ENVIRONMENT: "remote"
-  SUITE_XML: "testng-chrome.xml"
+  BROWSER:
+    value: "edge"
+    options:
+      - "chrome"
+      - "firefox"
+      - "edge"
+    description: "Select browser to run tests"
+
+  ENVIRONMENT:
+    value: "remote"
+    options:
+      - "local"
+      - "remote"
+    description: "Select environment"
+
+  SUITE_XML:
+    value: "testng-chrome.xml"
+    options:
+      - "testng-chrome.xml"
+      - "testng-firefox.xml"
+      - "testng-edge.xml"
+    description: "Select TestNG XML suite"
 
 test:
   image: docker:latest
