@@ -12,20 +12,27 @@
         <maven.compiler.target>17</maven.compiler.target>
 
         <!-- Default values -->
-        <browser>edge</browser>
+        <browser>chrome</browser>
         <environment>remote</environment>
-
-        <!-- Default suite XML (can be overridden by command line) -->
-        <suiteXmlFile>testng-chrome.xml</suiteXmlFile>
+        <suiteXmlFile>testng-chrome.xml</suiteXmlFile> <!-- assuming you update the suite xml accordingly -->
     </properties>
 
     <dependencies>
+        <!-- Selenium Java -->
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
             <version>4.12.1</version>
         </dependency>
 
+        <!-- Edge WebDriver (required for Edge) -->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-edge-driver</artifactId>
+            <version>4.12.1</version>
+        </dependency>
+
+        <!-- TestNG -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
@@ -43,6 +50,7 @@
                     <systemPropertyVariables>
                         <browser>${browser}</browser>
                         <environment>${environment}</environment>
+                        <remoteUrl>${remoteUrl}</remoteUrl>
                     </systemPropertyVariables>
                     <suiteXmlFiles>
                         <suiteXmlFile>${suiteXmlFile}</suiteXmlFile>
