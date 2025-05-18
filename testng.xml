@@ -1,0 +1,21 @@
+<suite name="CrossBrowserSuite" parallel="tests" thread-count="2">
+
+  <test name="ChromeTests">
+    <parameter name="environment" value="remote" />
+    <parameter name="browser" value="chrome" />
+    <parameter name="remoteUrl" value="http://selenium-hub:4444/wd/hub" />
+    <classes>
+      <class name="tests.ExampleTest" />
+    </classes>
+  </test>
+
+  <test name="FirefoxTests">
+    <parameter name="environment" value="remote" />
+    <parameter name="browser" value="firefox" />
+    <parameter name="remoteUrl" value="http://selenium-hub:4444/wd/hub" />
+    <classes>
+      <class name="tests.ExampleTest" />
+    </classes>
+  </test>
+
+</suite>

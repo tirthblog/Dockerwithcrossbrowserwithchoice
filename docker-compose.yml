@@ -1,0 +1,55 @@
+version: "3.8"
+
+services:
+  selenium-hub:
+    image: selenium/hub:4.32.0-20250515
+    ports:
+      - "4442:4442"
+      - "4443:4443"
+      - "4444:4444"
+
+  chrome:
+    image: selenium/node-chrome:4.32.0-20250515
+    shm_size: 2gb
+    depends_on:
+      - selenium-hub
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+
+  firefox:
+    image: selenium/node-firefox:4.32.0-20250515
+    shm_size: 2gb
+    depends_on:
+      - selenium-hub
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+
+  edge:
+    image: selenium/node-edge:4.32.0-20250515
+    shm_size: 2gb
+    depends_on:
+      - selenium-hub
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+
+  test-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - selenium-hub
+      - chrome
+      - firefox
+      - edge
+    environment:
+      - BROWSER=${BROWSER}
+      - ENVIRONMENT=${ENVIRONMENT}
+      - SUITE_XML=${SUITE_XML}
+    volumes:
+      - .:/app
