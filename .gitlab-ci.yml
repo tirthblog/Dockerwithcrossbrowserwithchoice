@@ -27,6 +27,7 @@ variables:
       - "testng-chrome.xml"
       - "testng-firefox.xml"
       - "testng-edge.xml"
+      - "testng.xml"
     description: "Select TestNG XML suite"
 
 test:
