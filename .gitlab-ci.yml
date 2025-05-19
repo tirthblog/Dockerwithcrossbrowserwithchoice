@@ -36,14 +36,11 @@ test:
     - docker:dind
   stage: test
   before_script:
-    - apk add --no-cache bash curl docker-compose
-    - curl -o wait-for-it.sh https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
-    - chmod +x wait-for-it.sh
+    - apk add --no-cache docker-compose
   script:
     - export BROWSER=$BROWSER
     - export ENVIRONMENT=$ENVIRONMENT
     - export SUITE_XML=$SUITE_XML
-    - ./wait-for-it.sh selenium-hub:4444 -t 60
     - docker-compose up --abort-on-container-exit --build
   artifacts:
     when: always
