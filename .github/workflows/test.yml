@@ -19,6 +19,8 @@ on:
         description: 'Select TestNG XML suite'
         required: false
         default: 'testng-chrome.xml'
+  schedule:
+    - cron: '30 23 * * *'  # Runs daily at 5:00 AM IST
 
 jobs:
   test:
