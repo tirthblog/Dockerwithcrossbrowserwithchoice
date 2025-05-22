@@ -1,0 +1,63 @@
+name: Run Automation Tests in Docker
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      BROWSER:
+        description: 'Select browser to run tests'
+        required: false
+        default: 'edge'
+      ENVIRONMENT:
+        description: 'Select environment'
+        required: false
+        default: 'remote'
+      SUITE_XML:
+        description: 'Select TestNG XML suite'
+        required: false
+        default: 'testng-chrome.xml'
+
+env:
+  BROWSER: ${{ inputs.BROWSER || 'edge' }}
+  ENVIRONMENT: ${{ inputs.ENVIRONMENT || 'remote' }}
+  SUITE_XML: ${{ inputs.SUITE_XML || 'testng-chrome.xml' }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      docker:
+        image: docker:20.10.24-dind
+        options: >-
+          --privileged
+          --name docker_service
+          -v /var/lib/docker
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
+
+      - name: Set environment variables
+        run: |
+          echo "BROWSER=${{ env.BROWSER }}" >> $GITHUB_ENV
+          echo "ENVIRONMENT=${{ env.ENVIRONMENT }}" >> $GITHUB_ENV
+          echo "SUITE_XML=${{ env.SUITE_XML }}" >> $GITHUB_ENV
+
+      - name: Run Docker Compose
+        run: docker-compose up --abort-on-container-exit --build
+
+      - name: Upload TestNG Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-reports
+          path: target/surefire-reports/
